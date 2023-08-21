@@ -70,7 +70,7 @@ impl Player<'_> {
     pub fn new<'a>(location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player {
         Player {
             location,
-            yaw: 0.,
+            yaw: std::f32::consts::PI * 1.25,
             texture_location,
             texture,
         }
