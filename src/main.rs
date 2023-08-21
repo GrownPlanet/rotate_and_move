@@ -85,19 +85,36 @@ impl Player<'_> {
         }
         if event.is_scancode_pressed(Scancode::Right) {
             self.yaw += 0.1;
+            if self.yaw > std::f32::consts::PI * 2. {
+                self.yaw = 0.;
+            }
         }
         if event.is_scancode_pressed(Scancode::Left) {
             self.yaw -= 0.1;
+            if self.yaw < 0. {
+                self.yaw = std::f32::consts::PI * 2.;
+            }
         }
     }
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String> {
         canvas.copy(self.texture, self.texture_location, self.location)?;
+
+        // same color as circle sprite
         canvas.set_draw_color(Color::RGB(99, 155, 255));
+
+        // rotate 64(x) around center
+        // rx = x * cos(a) - y * sin(a)
         let rx = (64. * self.yaw.cos() - 64. * self.yaw.sin()) as i32;
+        // rotate 64(y) around center
+        // ry = y * cos(a) + x * sin(a)
         let ry = (64. * self.yaw.cos() + 64. * self.yaw.sin()) as i32;
+
+        //draw line in right direction
         canvas.draw_line(Point::new(self.location.x, self.location.y),
                          Point::new(rx + self.location.x, ry + self.location.y))?;
+
+        // ok
         Ok(())
     }
 }
