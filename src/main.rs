@@ -19,7 +19,7 @@ pub fn main() -> Result<(), String> {
     let video_subsystem = sdl_context.video()?;
 
     let window = video_subsystem
-        .window("rust-sdl2 demo: Video", 800, 600)
+        .window("spinny thing", 800, 600)
         .position_centered()
         .opengl() .build() .map_err(|e| e.to_string())?; let mut canvas = window.into_canvas().build().map_err(|e| e.to_string())?;
 
@@ -78,19 +78,27 @@ impl Player<'_> {
 
     pub fn move_player(&mut self, event: KeyboardState) {
         if event.is_scancode_pressed(Scancode::Up) {
-            //self.location.y -= 16
+            // rotate 16(x) around center
+            // rotated_x = x * cos(a) - y * sin(a)
+            let rotated_x = (16. * self.yaw.cos() - 16. * self.yaw.sin()) as i32;
+            // rotate 16(y) around center
+            // rotated_y = y * cos(a) + x * sin(a)
+            let rotated_y = (16. * self.yaw.cos() + 16. * self.yaw.sin()) as i32;
+
+            self.location.x += rotated_x;
+            self.location.y += rotated_y;
         }
         if event.is_scancode_pressed(Scancode::Down) {
             //self.location.y += 16
         }
         if event.is_scancode_pressed(Scancode::Right) {
-            self.yaw += 0.1;
+            self.yaw += 0.2;
             if self.yaw > std::f32::consts::PI * 2. {
                 self.yaw = 0.;
             }
         }
         if event.is_scancode_pressed(Scancode::Left) {
-            self.yaw -= 0.1;
+            self.yaw -= 0.2;
             if self.yaw < 0. {
                 self.yaw = std::f32::consts::PI * 2.;
             }
@@ -105,17 +113,19 @@ impl Player<'_> {
         canvas.set_draw_color(Color::RGB(99, 155, 255));
 
         // rotate 64(x) around center
-        // rx = x * cos(a) - y * sin(a)
-        let rx = (64. * self.yaw.cos() - 64. * self.yaw.sin()) as i32;
+        // rotated_x = x * cos(a) - y * sin(a)
+        let rotated_x = (64. * self.yaw.cos() - 64. * self.yaw.sin()) as i32;
         // rotate 64(y) around center
-        // ry = y * cos(a) + x * sin(a)
-        let ry = (64. * self.yaw.cos() + 64. * self.yaw.sin()) as i32;
+        // rotated_y = y * cos(a) + x * sin(a)
+        let rotated_y = (64. * self.yaw.cos() + 64. * self.yaw.sin()) as i32;
+
+        let halfwidth = self.location.w / 2;
 
         //draw line in right direction
-        canvas.draw_line(Point::new(self.location.x, self.location.y),
-                         Point::new(rx + self.location.x, ry + self.location.y))?;
+        canvas.draw_line(Point::new(self.location.x + halfwidth, self.location.y + 16),
+                         Point::new(rotated_x + self.location.x + halfwidth, rotated_y + self.location.y + 16))?;
 
-        // ok
+        // Ok
         Ok(())
     }
 }
