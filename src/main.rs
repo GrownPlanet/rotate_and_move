@@ -112,12 +112,12 @@ impl Player<'_> {
         // same color as circle sprite
         canvas.set_draw_color(Color::RGB(99, 155, 255));
 
-        // rotate 64(x) around center
+        // rotate 32(x) around center
         // rotated_x = x * cos(a) - y * sin(a)
-        let rotated_x = (64. * self.yaw.cos() - 64. * self.yaw.sin()) as i32;
-        // rotate 64(y) around center
+        let rotated_x = (32. * self.yaw.cos() - 32. * self.yaw.sin()) as i32;
+        // rotate 32(y) around center
         // rotated_y = y * cos(a) + x * sin(a)
-        let rotated_y = (64. * self.yaw.cos() + 64. * self.yaw.sin()) as i32;
+        let rotated_y = (32. * self.yaw.cos() + 32. * self.yaw.sin()) as i32;
 
         let halfwidth = self.location.w / 2;
 
