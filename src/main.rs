@@ -29,7 +29,7 @@ pub fn main() -> Result<(), String> {
 
     let textures = texture_creator.load_texture(Path::new("textures.png"))?;
 
-    let mut player = Player::new(Rect::new(128, 128, 64, 64), 
+    let mut player = Player::new(Rect::new(128, 128, 32, 32), 
                                  Rect::new(0, 0, 64, 64),
                                  &textures);
 
@@ -98,6 +98,7 @@ impl Player<'_> {
     }
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String> {
+        // draw circle in the center
         canvas.copy(self.texture, self.texture_location, self.location)?;
 
         // same color as circle sprite
