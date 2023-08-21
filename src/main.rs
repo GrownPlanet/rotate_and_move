@@ -78,12 +78,7 @@ impl Player<'_> {
 
     pub fn move_player(&mut self, event: KeyboardState) {
         if event.is_scancode_pressed(Scancode::Up) {
-            // rotate 16(x) around center
-            // rotated_x = x * cos(a) - y * sin(a)
-            let rotated_x = (16. * self.yaw.cos() - 16. * self.yaw.sin()) as i32;
-            // rotate 16(y) around center
-            // rotated_y = y * cos(a) + x * sin(a)
-            let rotated_y = (16. * self.yaw.cos() + 16. * self.yaw.sin()) as i32;
+            let (rotated_x, rotated_y) = self.get_rotations(16.);
 
             self.location.x += rotated_x;
             self.location.y += rotated_y;
@@ -112,12 +107,7 @@ impl Player<'_> {
         // same color as circle sprite
         canvas.set_draw_color(Color::RGB(99, 155, 255));
 
-        // rotate 32(x) around center
-        // rotated_x = x * cos(a) - y * sin(a)
-        let rotated_x = (32. * self.yaw.cos() - 32. * self.yaw.sin()) as i32;
-        // rotate 32(y) around center
-        // rotated_y = y * cos(a) + x * sin(a)
-        let rotated_y = (32. * self.yaw.cos() + 32. * self.yaw.sin()) as i32;
+        let (rotated_x, rotated_y) = self.get_rotations(32.);
 
         let halfwidth = self.location.w / 2;
 
@@ -127,5 +117,16 @@ impl Player<'_> {
 
         // Ok
         Ok(())
+    }
+
+    fn get_rotations(&self, offset: f32) -> (i32, i32) {
+        // rotate offset(x) around center
+        // rotated_x = x * cos(a) - y * sin(a)
+        let rotated_x = (offset * self.yaw.cos() - offset * self.yaw.sin()) as i32;
+        // rotate offset(y) around center
+        // rotated_y = y * cos(a) + x * sin(a)
+        let rotated_y = (offset * self.yaw.cos() + offset * self.yaw.sin()) as i32;
+
+        return (rotated_x, rotated_y);
     }
 }
